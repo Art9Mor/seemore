@@ -1,0 +1,23 @@
+{% extends 'content/base.html' %}
+{% load my_tags %}
+{% block  content %}
+    <center>
+        <div class="card mb-4 box-shadow">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">Some content for your reference</h4>
+            </div>
+            <center>
+                <div class="card" style="width: 18rem;">
+                    {% for object in object_list %}
+                        <img src="{{ object.img|mymedia }}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ object.title }}</h5>
+                            <p class="card-text">{{ object.content|truncatechars:100 }}</p>
+                            <a href="{% url 'content:content_list' %}" class="btn btn-primary">Все статьи</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </center>
+        </div>
+    </center>
+{% endblock %}

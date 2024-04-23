@@ -1,0 +1,20 @@
+<div class="col-sm-4 offset-md-1 py-4">
+    <h4>Main Menu</h4>
+    <ul class="list-unstyled">
+        <li><a href="{% url 'content:content_list' %}" class="text-white">All content</a></li>
+        <li><a href="{% url 'content:content_list' %}" class="text-white">Paid content</a></li>
+        <li><a href="{% url 'content:content_list' %}" class="text-white">Free content</a></li>
+        <li><a href="{% url 'content:author_list' %}" class="text-white">Authors</a></li>
+        <li><a href="{% url 'content:home' %}" class="text-white">Home page</a></li>
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'users:profile' %}" class="text-white">Profile</a></li>
+            <li><a href="{% url 'users:logout' %}" class="text-white">Exit</a></li>
+        {% else %}
+            <li><a href="{% url 'users:register' %}" class="text-white">Registration</a></li>
+            <li><a href="{% url 'users:login' %}" class="text-white">Login</a></li>
+        {% endif %}
+        {% if user.is_authenticated and not user.is_subscribed %}
+            <li><a href="{% url 'users:subscription' %}" class="text-white">Subscribe to see more!</a></li>
+        {% endif %}
+    </ul>
+</div>

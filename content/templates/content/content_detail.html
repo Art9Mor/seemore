@@ -1,0 +1,33 @@
+{% extends 'content/base.html' %}
+{% load my_tags %}
+{% block content %}
+    <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light">{{ object.title }}</h1>
+            </div>
+        </div>
+    </section>
+    <div class="container">
+        <div class="row g-0 bg-body-secondary position-relative">
+            <div class="col-md-6 mb-md-0 p-md-4">
+                <img src="{{ object.photo|mymedia }}" class="w-100" alt="...">
+            </div>
+            <div class="col-md-6 p-4 ps-md-0">
+                <h5 class="mt-0">Slug: {{ object.slug }}</h5>
+                <p>Текст: {{ object.text }}</p>
+                <p>Дата публикации: {{ object.creation_date }}</p>
+                <a type="button" class="btn btn-primary" href="{% url 'catalog:reviews' %}">К отзывам</a>
+                {% if object.user == request.user or user.is_superuser or user.is_staff %}
+                    {% if perms.catalog.change_review %}
+                        <a type="button" class="btn btn-warning" href="{% url 'catalog:review_edit' object.pk %}">Редактировать</a>
+                    {% endif %}
+                {% endif %}
+                {% if user.is_superuser %}
+                    <a type="button" class="btn btn-danger"
+                       href="{% url 'catalog:delete_review' object.pk %}">Удалить</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

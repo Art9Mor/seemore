@@ -1,0 +1,24 @@
+{% extends 'content/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title">Create Subscription</h1>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="subscription_name" class="form-label">Subscription Type:</label>
+                        <select name="subscription_name" id="subscription_name" class="form-select">
+                            <option value="short">Short (1 month)</option>
+                            <option value="long">Long (6 months)</option>
+                            <option value="ultra">Ultra (1 year)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Subscribe</button>
+                    <a href="{% url 'users:payment_stop' %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
