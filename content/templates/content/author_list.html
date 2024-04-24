@@ -1,66 +1,32 @@
 {% extends 'content/base.html' %}
-{% load static %}
+{% load my_tags %}
 
 {% block content %}
-    <h1>Select an Author</h1>
-    <form id="authorForm" method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <select id="id_authors" class="form-control">
-            <option value=""></option>
-        </select>
-        <input type="submit" value="Show Author Info">
-    </form>
-    <div id="authorInfo"></div>
-{% endblock %}
-
-{% block scripts %}
-    {{ block.super }}
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script>
-        $(document).ready(function () {
-            $('#id_authors').select2({
-                placeholder: 'Select an Author',
-                ajax: {
-                    url: '{% url "content:content_autocomplete" %}',
-                    dataType: 'json',
-                    delay: 250,
-                    data: function (params) {
-                        return {
-                            author: params.term
-                        };
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: data.results
-                        };
-                    },
-                    cache: true
-                }
-            });
-
-            $('#authorForm').submit(function (event) {
-                event.preventDefault();
-                var authorId = $('#id_authors').val();
-                if (authorId) {
-                    $.ajax({
-                        url: '{% url "content:author_info" %}',
-                        data: {
-                            'author_id': authorId
-                        },
-                        success: function (response) {
-                            $('#authorInfo').html('<h2>' + response.author.full_name + '</h2>');
-                            $('#authorInfo').append('<img src="' + response.author.avatar_url + '">');
-                            $('#authorInfo').append('<h3>Contents:</h3>');
-                            for (var i = 0; i < response.author_contents.length; i++) {
-                                $('#authorInfo').append('<p>Title: ' + response.author_contents[i].title + ', Category: ' + response.author_contents[i].category + '</p>');
-                            }
-                        }
-                    });
-                }
-            });
-        });
-    </script>
+    <div class="container">
+        <h1 class="mt-5 mb-4">{{ title }}</h1>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="author-list">
+                    {% for object in object_list %}
+                        <div class="card mb-3">
+                        <div class="card-header">
+                            <img src="{{ object.user.avatar|mymedia }}" class="card-img-top" alt="...">
+                        </div>
+                            <div class="card-body">
+                                <h2 class="card-title">{{ author.user.full_name }}</h2>
+                                <p class="card-text"><strong>Exists since:</strong> {{ author.exists_since }}</p>
+                                <p class="card-text"><strong>Article Count:</strong> {{ author.article_count }}</p>
+                                <a href="{% url 'content:author_detail' author.pk %}" class="btn btn-info">View Author</a>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p>No authors found.</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <a href="{% url 'content:author_list' %}" class="btn btn-secondary btn-block mt-3">Back to Author List</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

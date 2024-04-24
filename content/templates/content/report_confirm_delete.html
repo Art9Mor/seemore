@@ -6,12 +6,13 @@
             <div class="row">
                 <div class="col-auto">
                     <div class="card">
+                        <div class="card-header">Delete report</div>
                         <div class="card-body">
                             <form method="post">
                                 {% csrf_token %}
-                                <p>Delete the report "{{ object.title }}"?</p>
+                                <p>Are you sure you want to delete report "{{ object.user.full_name }}"?</p>
                                 <button type="submit" class="btn btn-danger">Confirm</button>
-                                <a href="{% url 'content:home' %}" class="btn btn-success">Cancel</a>
+                                <a href="#" onclick="history.back()" class="btn btn-success">Cancel</a>
                             </form>
                         </div>
                     </div>

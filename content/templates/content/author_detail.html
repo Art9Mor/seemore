@@ -1,0 +1,29 @@
+{% extends 'content/base.html' %}
+{% load my_tags %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="mb-0">{{ object.user.full_name }}</h1>
+        </div>
+        <div class="card-body">
+            <img src="{{ object.user.avatar.url }}" class="img-fluid rounded-circle" alt="Avatar">
+            <div class="mt-3">
+                <p><strong>Full Name:</strong> {{ object.user.full_name }}</p>
+                <p><strong>Exist Since:</strong> {{ object.exists_since }}</p>
+                <p><strong>Articles:</strong> {{ object.article_count }}</p>
+            </div>
+        </div>
+        <div class="card-footer">
+            {% if user.is_superuser or user.is_staff %}
+                <a href="{% url 'content:author_delete' object.pk %}" class="btn btn-danger mr-2">Delete Author</a>
+            {% endif %}
+            <a href="{% url 'content:content_list' %}?author={{ object.user.pk }}" class="btn btn-primary mr-2">
+                View Content
+            </a>
+            <a href="#" onclick="history.back()" class="btn btn-secondary">Back</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,23 +1,32 @@
+
+Вот обновленный код с добавлением дополнительных стилей для красивого отображения формы профиля:
+
+django
+Copy code
 {% extends 'content/base.html' %}
 
 {% block content %}
-
-            <div class="col-12">
-                <form class="row" method="post" enctype="multipart/form-data">
-                    <div class="col-3"></div>
-                    <div class="col-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Profile</h3>
-                            </div>
-                            <div class="card-body">
-                                {% csrf_token %}
-                                {{ form.as_p }}
-                                <button type="submit" class="btn btn-success">Save</button>
-                                <a type="button" class="btn btn-danger" href="{% url 'content:home' %}">Cancel</a>
-                            </div>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="card-title">Edit Profile</h3>
+                        </div>
+                        <div class="card-body">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-success">Save</button>
+                            <a href="{% url 'content:home' %}" class="btn btn-secondary">Cancel</a>
+                            <a href="{% url 'users:cancel_subscription' object.pk %}" class="btn btn-warning">Stop subscription</a>
+                            <a href="{% url 'users:user_delete' %}" class="btn btn-danger">Delete account</a>
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
     </div>
 {% endblock %}

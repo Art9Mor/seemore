@@ -1,11 +1,12 @@
 import stripe
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth import logout
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import CreateView, UpdateView, View, DetailView
+from django.views.generic import CreateView, UpdateView, View
 
 from config import settings
 from users.forms import UserRegisterForm, UserUpdateForm, CancelSubscriptionForm, PaymentSubscriptionForm
@@ -35,6 +36,26 @@ class ProfileView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+
+class UserDeleteView(LoginRequiredMixin, View):
+    """
+    View for deleting a user account.
+    """
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        user.delete()
+        logout(request)
+        return redirect('users/user_success_delete.html')
+
+
+def are_you_sure(request):
+    return render(request, 'users/are_you_sure.html')
+
+
+def user_success_delete(request):
+    return render(request, 'users/user_success_delete.html')
 
 
 class CreatePaymentSubscriptionView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -129,7 +150,7 @@ def error_view(request):
     return render(request, 'users/payment_error.html')
 
 
-class CancelSubscriptionView(View):
+class CancelSubscriptionView(LoginRequiredMixin, View):
     """
     View for cancelling a subscription
     """
@@ -169,7 +190,7 @@ def stop_payment(request):
     return render(request, 'users/payment_stop.html')
 
 
-class StripeWebhookView(View):
+class StripeWebhookView(LoginRequiredMixin, View):
     """
     Check out the Stripe session.
     """
@@ -200,4 +221,3 @@ class StripeWebhookView(View):
                 user.save()
 
         return HttpResponse(status=200)
-

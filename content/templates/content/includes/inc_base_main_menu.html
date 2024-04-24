@@ -16,5 +16,6 @@
         {% if user.is_authenticated and not user.is_subscribed %}
             <li><a href="{% url 'users:subscription' %}" class="text-white">Subscribe to see more!</a></li>
         {% endif %}
+        <li><a href="{% url 'content:contacts_info' %}" class="text-white">Our contacts</a></li>
     </ul>
 </div>

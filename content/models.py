@@ -13,7 +13,7 @@ NULLABLE = {
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.DO_NOTHING, verbose_name='User')
     exists_since = models.DateField(auto_now_add=True, verbose_name='Exists since')
-    article_count = models.PositiveIntegerField(default=0, verbose_name='Article Count')
+    article_count = models.PositiveIntegerField(default=0, verbose_name='Article count')
 
     def __str__(self):
         return f'Author: {self.user.full_name}'
@@ -24,13 +24,15 @@ class Author(models.Model):
 
 
 class Content(models.Model):
-    author = models.ForeignKey(Author, on_delete=models.DO_NOTHING, verbose_name='Author')
+    author = models.OneToOneField(Author, on_delete=models.DO_NOTHING, verbose_name='Author')
     category = models.CharField(max_length=150, verbose_name='Category', default='Unknown')
+    slug = models.CharField(unique=True, max_length=100, verbose_name='Slug', **NULLABLE)
     title = models.CharField(max_length=255, verbose_name='Title')
     content = models.TextField(verbose_name='Content', )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Created')
     modified_at = models.DateTimeField(auto_now=True, verbose_name='Modified', **NULLABLE)
     image = models.ImageField(upload_to='content/', **NULLABLE)
+    video_url = models.URLField(max_length=200, verbose_name='Video URL', **NULLABLE)
     paid_only = models.BooleanField(default=False, verbose_name='Paid only')
     is_active = models.BooleanField(default=True, verbose_name='Is published')
     views_count = models.IntegerField(default=0, verbose_name='Views')
@@ -47,8 +49,11 @@ class Content(models.Model):
 class Report(models.Model):
     content = models.ForeignKey(Content, on_delete=models.CASCADE, verbose_name='Content to report')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, verbose_name='Reporting user', null=True)
+    slug = models.CharField(unique=True, max_length=100, verbose_name='Slug', **NULLABLE)
+    title = models.CharField(max_length=255, verbose_name='Title')
     comment = models.TextField(verbose_name='Comment', **NULLABLE)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Date of reporting')
+    screenshots = models.ImageField(upload_to='screenshots/', verbose_name='Screenshots', **NULLABLE)
 
     def check_and_deactivate_content(cls):
         """

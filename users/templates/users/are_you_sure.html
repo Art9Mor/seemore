@@ -4,10 +4,11 @@
     <div class="container mt-5">
         <div class="card">
             <div class="card-body">
-                <h1 class="card-title">Congratulations! You have successfully subscribed! Now you can see more!</h1>
+                <h1 class="card-title">Are you sure that you want to delete the account?</h1>
             </div>
             <div class="card-footer">
-                <a href="{% url 'content:home' %}" class="btn btn-primary">Go to home page end see more!</a>
+                <a href="{% url 'users:user_delete' %}" class="btn btn-danger">Yes!</a>
+                <a href="{% url 'content:home' %}" class="btn btn-success">No!</a>
             </div>
         </div>
     </div>

@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'content',
     'users',
 
-    'django_select2',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -134,6 +134,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 AUTH_USER_MODEL = 'users.User'
 

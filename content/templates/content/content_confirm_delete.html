@@ -9,9 +9,9 @@
                         <div class="card-body">
                             <form method="post">
                                 {% csrf_token %}
-                                <p>You rely want to delete content "{{ object.title }} {{ object.last_name }}"?</p>
+                                <p>Are you sure you want to remove the content "{{ object.title }}"?</p>
                                 <button type="submit" class="btn btn-danger">Confirm</button>
-                                <a href="{% url 'content:home' %}" class="btn btn-success">Cancel</a>
+                                <a href="#" onclick="history.back()" class="btn btn-success">Cancel</a>
                             </form>
                         </div>
                     </div>

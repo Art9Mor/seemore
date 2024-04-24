@@ -8,10 +8,8 @@
                     <div class="card">
                         <div class="card-header">
                             {% if object %}
-                            <h3 class="card-title">Update content</h3>
-                        {% else %}
-                            <h3 class="card-title">Create content</h3>
-                        {% endif %}
+                                <h3 class="card-title">Create report</h3>
+                            {% endif %}
                         </div>
                         <div class="card-body">
                             <form method="post" enctype="multipart/form-data">
@@ -19,8 +17,6 @@
                                 {{ form.as_p }}
                                 <button type="submit" class="btn btn-success">
                                     {% if object %}
-                                        Save
-                                    {% else %}
                                         Create
                                     {% endif %}
                                 </button>

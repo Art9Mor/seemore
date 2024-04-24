@@ -1,5 +1,6 @@
 {% extends 'content/base.html' %}
 {% load my_tags %}
+
 {% block content %}
     <section class="py-5 text-center container">
         <div class="row py-lg-5">
@@ -8,25 +9,43 @@
             </div>
         </div>
     </section>
+
     <div class="container">
         <div class="row g-0 bg-body-secondary position-relative">
-            <div class="col-md-6 mb-md-0 p-md-4">
-                <img src="{{ object.photo|mymedia }}" class="w-100" alt="...">
-            </div>
+            {% if object.image %}
+                <div class="col-md-6 mb-md-0 p-md-4">
+                    <img src="{{ object.image|mymedia }}" class="w-100" alt="...">
+                </div>
+            {% endif %}
             <div class="col-md-6 p-4 ps-md-0">
-                <h5 class="mt-0">Slug: {{ object.slug }}</h5>
-                <p>Текст: {{ object.text }}</p>
-                <p>Дата публикации: {{ object.creation_date }}</p>
-                <a type="button" class="btn btn-primary" href="{% url 'catalog:reviews' %}">К отзывам</a>
-                {% if object.user == request.user or user.is_superuser or user.is_staff %}
-                    {% if perms.catalog.change_review %}
-                        <a type="button" class="btn btn-warning" href="{% url 'catalog:review_edit' object.pk %}">Редактировать</a>
+                <div class="mb-3">
+                    <h5 class="mt-0">Slug: {{ object.slug }}</h5>
+                    {% if object.category %}
+                        <p>Category: {{ object.category }}</p>
                     {% endif %}
-                {% endif %}
-                {% if user.is_superuser %}
-                    <a type="button" class="btn btn-danger"
-                       href="{% url 'catalog:delete_review' object.pk %}">Удалить</a>
-                {% endif %}
+                    {% if object.video_url %}
+                        <video controls>
+                            <source src="{{ object.video_url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    {% endif %}
+                    <p>Content: {{ object.content }}</p>
+                    <p>Author: {{ object.author.full_name }}</p>
+                    <p>Views: {{ object.views_count }}</p>
+                    <p>Publication date: {{ object.created_at }}</p>
+                    {% if object.modified_at %}
+                        <p>Last update: {{ object.modified_at }}</p>
+                    {% endif %}
+                </div>
+                <div class="d-grid gap-2">
+                    <a type="button" class="btn btn-primary" href="{% url 'content:home' %}">To home</a>
+                    <a type="button" class="btn btn-info" href="{% url 'content:author_detail' object.author.pk %}">Author</a>
+                    <a type="button" class="btn btn-danger" href="{% url 'content:report_create' object.pk %}">Report</a>
+                    {% if object.author.user == request.user or user.is_superuser or user.is_staff %}
+                        <a type="button" class="btn btn-warning" href="{% url 'content:content_update' object.pk %}">Edit</a>
+                        <a type="button" class="btn btn-danger" href="{% url 'content:content_delete' object.pk %}">Delete</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
