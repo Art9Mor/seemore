@@ -8,7 +8,7 @@
         <li><a href="{% url 'content:home' %}" class="text-white">Home page</a></li>
         {% if user.is_authenticated %}
             <li><a href="{% url 'users:profile' %}" class="text-white">Profile</a></li>
-            <li><a href="{% url 'users:logout' %}" class="text-white">Exit</a></li>
+            <li><a href="{% url 'users:logout' %}" class="text-white">Logout</a></li>
         {% else %}
             <li><a href="{% url 'users:register' %}" class="text-white">Registration</a></li>
             <li><a href="{% url 'users:login' %}" class="text-white">Login</a></li>

@@ -12,6 +12,7 @@ class Command(BaseCommand):
             phone_number='+7666666666',
             email='online_school@yandex.ru',
             full_name='Amadey Mozart',
+            is_author=True,
             is_active=True,
             is_staff=True,
             is_superuser=True

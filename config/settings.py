@@ -140,7 +140,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 AUTH_USER_MODEL = 'users.User'
 
 LOGIN_REDIRECT_URL = 'content:home'
-LOGOUT_REDIRECT_URL = 'content:home'
+LOGOUT_REDIRECT_URL = 'content:login'
 LOGIN_URL = '/users/'
 
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')

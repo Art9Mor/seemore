@@ -3,7 +3,6 @@
 
 {% block content %}
     <div class="container">
-        <h1 class="mt-5 mb-4">{{ title }}</h1>
         <div class="row">
             <div class="col-md-8">
                 <div class="author-list">
@@ -25,7 +24,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <a href="{% url 'content:author_list' %}" class="btn btn-secondary btn-block mt-3">Back to Author List</a>
+                <a href="#" onclick="history.back()" class="btn btn-secondary btn-block mt-3">Back</a>
             </div>
         </div>
     </div>

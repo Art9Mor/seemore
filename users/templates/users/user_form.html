@@ -1,8 +1,3 @@
-
-Вот обновленный код с добавлением дополнительных стилей для красивого отображения формы профиля:
-
-django
-Copy code
 {% extends 'content/base.html' %}
 
 {% block content %}
@@ -21,7 +16,11 @@ Copy code
                         <div class="card-footer">
                             <button type="submit" class="btn btn-success">Save</button>
                             <a href="{% url 'content:home' %}" class="btn btn-secondary">Cancel</a>
-                            <a href="{% url 'users:cancel_subscription' object.pk %}" class="btn btn-warning">Stop subscription</a>
+                            {% if user.is_subscribed %}
+                                <a href="{% url 'users:cancel_subscription' object.pk %}" class="btn btn-warning">Stop subscription</a>
+                            {% else %}
+                                <a href="{% url 'users:subscription' %}" class="btn btn-warning">Subscribe</a>
+                            {% endif %}
                             <a href="{% url 'users:user_delete' %}" class="btn btn-danger">Delete account</a>
                         </div>
                     </div>
