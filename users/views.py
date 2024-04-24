@@ -28,6 +28,9 @@ class RegisterView(CreateView):
 
 
 class CustomLoginView(LoginView):
+    """
+    View for logging in
+    """
     def form_valid(self, form):
         user = form.get_user()
         if not user.is_active:
@@ -36,6 +39,9 @@ class CustomLoginView(LoginView):
 
 
 class AccountInactiveView(TemplateView):
+    """
+    View for message thst user is inactive
+    """
     template_name = 'users/account_inactive.html'
 
 
