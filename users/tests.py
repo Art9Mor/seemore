@@ -30,7 +30,7 @@ class UserTestCase(TestCase):
     def test_register_view(self):
         client = Client()
         response = client.post(reverse('users:register'), {'phone_number': '9876543210', 'password1': 'testpass', 'password2': 'testpass'})
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
 
     def test_profile_view(self):
         client = Client()

@@ -1,17 +1,16 @@
 {% extends 'content/base.html' %}
 {% load my_tags %}
+
 {% block content %}
     <section class="py-5 text-center container">
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
                 <p class="lead text-body-secondary">
-                    Here you can see all content of our authors.
-                    {% if user.is_authenticated %}
+                    Here you can see all paid content of our authors.
                         <p>Also you can
                             <a type="button" class="btn btn-link"
-                               href="{% url 'content:content_create' %}">write your content</a>
+                               href="{% url 'content:content_create' %}">create your content</a>
                         </p>
-                    {% endif %}
                 </p>
             </div>
         </div>
@@ -33,15 +32,15 @@
                                             <a type="button" class="btn btn-sm btn-outline-secondary"
                                                href="{% url 'content:content_detail' object.pk %}">See more</a>
                                             <a type="button" class="btn btn-sm btn-outline-secondary"
-                                               href="{% url 'content:home' object.pk %}">Back to home page</a>
+                                               href="{% url 'content:home' %}">Back to home page</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     {% endif %}
-                    {% empty %}
-                        <p>No content found.</p>
+                {% empty %}
+                    <p>No content found.</p>
                 {% endfor %}
             </div>
         </div>

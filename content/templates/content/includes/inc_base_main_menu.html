@@ -2,8 +2,8 @@
     <h4>Main Menu</h4>
     <ul class="list-unstyled">
         <li><a href="{% url 'content:content_list' %}" class="text-white">All content</a></li>
-        <li><a href="{% url 'content:content_list' %}" class="text-white">Paid content</a></li>
-        <li><a href="{% url 'content:content_list' %}" class="text-white">Free content</a></li>
+        <li><a href="{% url 'content:content_paid_list' %}" class="text-white">Paid content</a></li>
+        <li><a href="{% url 'content:content_free_list' %}" class="text-white">Free content</a></li>
         <li><a href="{% url 'content:author_list' %}" class="text-white">Authors</a></li>
         <li><a href="{% url 'content:home' %}" class="text-white">Home page</a></li>
         {% if user.is_authenticated %}

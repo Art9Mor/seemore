@@ -178,6 +178,30 @@ class ContentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
         return False
 
 
+class ContentPaidListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = Content
+    template_name = 'content/content_paid_list.html'
+    context_object_name = 'content_paid_list'
+    paginate_by = 9
+
+    def test_func(self):
+        user = self.request.user
+        return user.is_superuser or user.is_staff or (user.is_authenticated and user.is_subscribed)
+
+    def get_queryset(self):
+        return Content.objects.filter(paid_only=True)
+
+
+class ContentFreeListView(ListView):
+    model = Content
+    template_name = 'content/content_free_list.html'
+    context_object_name = 'content_free_list'
+    paginate_by = 9
+
+    def get_queryset(self):
+        return Content.objects.filter(paid_only=False)
+
+
 class ReportCreateView(LoginRequiredMixin, CreateView):
     """
     Create a new report.

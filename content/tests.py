@@ -7,7 +7,7 @@ from users.models import User
 
 class ContentTestCase(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.user = User.objects.create_user(phone_number='+79867896522', password='testpassword')
         self.author = Author.objects.create(user=self.user)
         self.content = Content.objects.create(
             author=self.author,

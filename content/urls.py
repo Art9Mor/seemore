@@ -3,7 +3,7 @@ from django.urls import path
 from content.apps import ContentConfig
 from content.views import ContentListView, ContentDetailView, ContentCreateView, ContentUpdateView, ContentDeleteView, \
     ReportListView, ReportCreateView, ReportDeleteView, HomeView, AuthorListView, BecomeAuthorView, contacts, \
-    ReportDetailView, AuthorUpdateView
+    ReportDetailView, AuthorUpdateView, ContentPaidListView, ContentFreeListView
 
 app_name = ContentConfig.name
 
@@ -13,6 +13,8 @@ urlpatterns = [
 
     # Content URLs
     path('content/', ContentListView.as_view(), name='content_list'),
+    path('content_paid_list/', ContentPaidListView.as_view(), name='content_paid_list'),
+    path('content_free_list/', ContentFreeListView.as_view(), name='content_free_list'),
     path('content/<int:pk>/', ContentDetailView.as_view(), name='content_detail'),
     path('content/create/', ContentCreateView.as_view(), name='content_create'),
     path('content/update/<int:pk>/', ContentUpdateView.as_view(), name='content_update'),
