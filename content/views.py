@@ -44,6 +44,7 @@ class ContentListView(ListView):
     model = Content
     template_name = 'content/content_list.html'
     context_object_name = 'content_list'
+    paginate_by = 9
     extra_context = {
         'title': 'Content List',
     }
@@ -63,6 +64,9 @@ class ContentListView(ListView):
         context = super().get_context_data(**kwargs)
         paginator = ContentPaginator(self.object_list, self.paginate_by)
         page_number = self.request.GET.get('page')
+
+        if page_number is None:
+            page_number = 1
 
         try:
             page_obj = paginator.page(page_number)

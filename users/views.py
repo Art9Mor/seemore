@@ -221,3 +221,5 @@ class StripeWebhookView(LoginRequiredMixin, View):
                 user.save()
 
         return HttpResponse(status=200)
+
+
