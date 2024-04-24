@@ -2,11 +2,12 @@ import stripe
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.views import LoginView
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import CreateView, UpdateView, View
+from django.views.generic import CreateView, UpdateView, View, TemplateView
 
 from config import settings
 from users.forms import UserRegisterForm, UserUpdateForm, CancelSubscriptionForm, PaymentSubscriptionForm
@@ -24,6 +25,18 @@ class RegisterView(CreateView):
 
     def form_valid(self, form):
         return super().form_valid(form)
+
+
+class CustomLoginView(LoginView):
+    def form_valid(self, form):
+        user = form.get_user()
+        if not user.is_active:
+            return HttpResponseRedirect(reverse_lazy('account_inactive'))
+        return super().form_valid(form)
+
+
+class AccountInactiveView(TemplateView):
+    template_name = 'users/account_inactive.html'
 
 
 class ProfileView(LoginRequiredMixin, UpdateView):
@@ -45,8 +58,9 @@ class UserDeleteView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         user = request.user
-        user.delete()
         logout(request)
+        user.is_active = False
+        user.save()
         return redirect('users/user_success_delete.html')
 
 
@@ -221,5 +235,3 @@ class StripeWebhookView(LoginRequiredMixin, View):
                 user.save()
 
         return HttpResponse(status=200)
-
-

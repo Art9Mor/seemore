@@ -21,7 +21,9 @@
                             {% else %}
                                 <a href="{% url 'users:subscription' %}" class="btn btn-warning">Subscribe</a>
                             {% endif %}
-                            <a href="{% url 'users:user_delete' %}" class="btn btn-danger">Delete account</a>
+                            {% if not user.is_superuser and not user.is_staff %}
+                                <a href="{% url 'users:are_you_sure' %}" class="btn btn-danger">Delete account</a>
+                            {% endif %}
                         </div>
                     </div>
                 </form>

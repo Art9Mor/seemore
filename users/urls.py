@@ -3,13 +3,15 @@ from django.urls import path
 
 from users.apps import UsersConfig
 from users.views import RegisterView, ProfileView, success_view, error_view, CancelSubscriptionView, \
-    CreatePaymentSubscriptionView, stop_payment, user_success_delete, UserDeleteView, are_you_sure
+    CreatePaymentSubscriptionView, stop_payment, user_success_delete, UserDeleteView, are_you_sure, CustomLoginView, \
+    AccountInactiveView
 
 app_name = UsersConfig.name
 
 urlpatterns = [
     # User URLs
-    path('', LoginView.as_view(template_name='users/login.html'), name='login'),
+    path('', CustomLoginView.as_view(template_name='users/login.html'), name='login'),
+    path('account_inactive/', AccountInactiveView.as_view(), name='account_inactive'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('register/', RegisterView.as_view(), name='register'),
     path('profile/', ProfileView.as_view(), name='profile'),
