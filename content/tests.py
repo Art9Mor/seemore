@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 
-from .models import Author, Content, Report
+from content.models import Author, Content, Report
 from users.models import User
 
 
