@@ -75,3 +75,4 @@ You can run tests to ensure the functionality of the application:
 
 ```bash
 python manage.py test
+```
