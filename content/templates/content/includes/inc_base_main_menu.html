@@ -8,14 +8,19 @@
         <li><a href="{% url 'content:home' %}" class="text-white">Home page</a></li>
         {% if user.is_authenticated %}
             <li><a href="{% url 'users:profile' %}" class="text-white">Profile</a></li>
-            <li><<button type="submit">Logout</button></li>
+            <form method="post" action="{% url 'users:logout' %}">
+                {% csrf_token %}
+                <div class="d-inline">
+                    <button class="btn btn-link text-danger" type="submit">Logout</button>
+                </div>
+            </form>
         {% else %}
             <li><a href="{% url 'users:register' %}" class="text-white">Registration</a></li>
-            <li><a href="{% url 'users:login' %}" class="text-white">Login</a></li>
+            <li><a href="{% url 'users:login' %}" class="text-success">Login</a></li>
         {% endif %}
         {% if user.is_authenticated and not user.is_subscribed %}
-            <li><a href="{% url 'users:subscription' %}" class="text-white">Subscribe to see more!</a></li>
+            <li><a href="{% url 'users:subscription' %}" class="text-success">Subscribe to see more!</a></li>
         {% endif %}
-        <li><a href="{% url 'content:contacts_info' %}" class="text-white">Our contacts</a></li>
+        <li><a href="{% url 'content:contacts_info' %}" class="text-warning">Our contacts</a></li>
     </ul>
 </div>

@@ -152,6 +152,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'users.tasks.check_subscription_expiry',
         'schedule': timedelta(days=1),
     },
+    'delete_inactive_users': {
+        'task': 'users.tasks.delete_inactive_users',
+        'schedule': timedelta(weeks=1),
+    },
 }
 
 

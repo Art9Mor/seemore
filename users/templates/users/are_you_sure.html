@@ -1,15 +1,18 @@
 {% extends 'content/base.html' %}
 
 {% block content %}
-    <div class="container mt-5">
-        <div class="card">
-            <div class="card-body">
-                <h1 class="card-title">Are you sure that you want to delete the account?</h1>
-            </div>
-            <div class="card-footer">
-                <a href="{% url 'users:user_delete' %}" class="btn btn-danger">Yes!</a>
-                <a href="{% url 'content:home' %}" class="btn btn-success">No!</a>
-            </div>
+<div class="container mt-5">
+    <div class="card mx-auto" style="max-width: 400px;">
+        <div class="card-body">
+            <h1 class="card-title text-center">Are you sure that you want to delete the account?</h1>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+            <form method="post" action="{% url 'users:user_delete' %}">
+                {% csrf_token %}
+                <button class="btn btn-danger" type="submit">Yes!</button>
+            </form>
+            <a href="{% url 'content:home' %}" class="btn btn-success">No!</a>
         </div>
     </div>
+</div>
 {% endblock %}

@@ -10,7 +10,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, View, TemplateView
 
 from config import settings
-from users.forms import UserRegisterForm, UserUpdateForm, CancelSubscriptionForm, PaymentSubscriptionForm
+from users.forms import UserRegisterForm, UserUpdateForm, CancelSubscriptionForm, PaymentSubscriptionForm, \
+    CustomAuthenticationForm
 from users.models import User, PaymentSubscription
 
 
@@ -31,18 +32,23 @@ class CustomLoginView(LoginView):
     """
     View for logging in
     """
+    authentication_form = CustomAuthenticationForm
+
     def form_valid(self, form):
         user = form.get_user()
         if not user.is_active:
-            return HttpResponseRedirect(reverse_lazy('account_inactive'))
+            return HttpResponseRedirect(reverse_lazy('users:account_inactive'))
         return super().form_valid(form)
 
 
-class AccountInactiveView(TemplateView):
+class AccountInactiveView(UserPassesTestMixin, TemplateView):
     """
-    View for message thst user is inactive
+    View for message that user is inactive
     """
     template_name = 'users/account_inactive.html'
+
+    def test_func(self):
+        return not self.request.user.is_active
 
 
 class ProfileView(LoginRequiredMixin, UpdateView):
@@ -64,10 +70,13 @@ class UserDeleteView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         user = request.user
-        logout(request)
         user.is_active = False
         user.save()
-        return redirect('users/user_success_delete.html')
+        logout(request)
+        return redirect('users:user_success_delete')
+
+    def get_success_url(self):
+        return reverse_lazy('users:user_success_delete')
 
 
 def are_you_sure(request):
