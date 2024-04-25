@@ -61,13 +61,24 @@ This project is a Django-based web application designed to manage user subscript
 2. Register or log in if you already have an account.
 3. Use the application's features such as profile management, subscription creation and cancellation.
 4. Unregistered user can only see free content
-5. A registered user sees free content, can become an author, and can sign up for a subscription that allows them to see paid content.
-6. Also registered user can temporarily deactivate his account, that may be activated again or deleted after 21 days.
+5. A registered user sees free content, can become an author, and can subscribe that allows him to see paid content.
+6. Also registered user can temporarily deactivate his account, that may be activated again or deleted after 21 days.  
+
 
 ## Subscription
 
 Subscription is carried out using Stripe. Subscription verification occurs by receiving a response from the Stripe server using a Webhook.  
-For using Stripe source you must go to hte stripe official website [https://stripe.com/](https://stripe.com/) and take a keys for correct working.
+For using Stripe source you must go to hte stripe official website [https://stripe.com/](https://stripe.com/) and take a keys for correct working.  
+
+Subscription has 3 parameters: short, long and ultra.  
+
+Short - 1 month subscription, that coast 300 rub.  
+Long - 6 month subscription, that coast 1200 rub.  
+Ultra - 1 year subscription, that coast 2100 rub.
+
+The program itself tracks the user's remaining subscription time.  
+After the subscription period ends, it is automatically canceled.
+
 
 ## Testing
 
@@ -76,3 +87,42 @@ You can run tests to ensure the functionality of the application:
 ```bash
 python manage.py test
 ```
+
+## Built-in Commands
+
+1. Database creation
+
+      ```bash
+      python3 manage.py create_db
+      ```
+   This command will create database, or refresh it.
+
+2. Drop database
+
+      ```bash
+      python3 manage.py drop_db
+      ```
+   This command will delete your database.
+
+3. Create superuser
+
+     ```bash
+     python3 manage.py csu 
+     ```
+   This command will create superuser
+
+4. Delete reports
+
+      ```bash 
+      python3 manage.py delete_reports <content_id>
+      ```
+   This command will remove all complaints from content based on its id.  
+   Example: python3 manage.py delete_reports 1  
+   It will remove all reports from content with id 1.
+
+5. Populate database
+
+      ```bash
+      python3 manage.py populate_db
+      ```
+   This command will fill your database by test data.
