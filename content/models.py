@@ -24,7 +24,7 @@ class Author(models.Model):
 
 
 class Content(models.Model):
-    author = models.OneToOneField(Author, on_delete=models.DO_NOTHING, verbose_name='Author')
+    author = models.ForeignKey(Author, on_delete=models.DO_NOTHING, verbose_name='Author')
     category = models.CharField(max_length=150, verbose_name='Category', default='Unknown')
     slug = models.CharField(unique=True, max_length=100, verbose_name='Slug', **NULLABLE)
     title = models.CharField(max_length=255, verbose_name='Title')

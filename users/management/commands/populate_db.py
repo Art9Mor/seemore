@@ -22,7 +22,7 @@ class Command(BaseCommand):
         for _ in range(num_users):
             phone_number = f'+7900{random.randint(1000000, 9999999)}'
             email = f'user{random.randint(1000, 9999)}@example.com'
-            user = User.objects.create_user(phone_number=phone_number, email=email, password='password123')
+            user = User.objects.create(phone_number=phone_number, email=email, password='password123')
             if random.choice([True, False]):
                 PaymentSubscription.objects.create(
                     user=user,
@@ -33,8 +33,10 @@ class Command(BaseCommand):
 
     def create_authors(self):
         users = User.objects.all()
+        authors = Author.objects.all()
+        existing_authors = [author.user_id for author in authors]
         for user in users:
-            if random.choice([True, False]):
+            if user.id not in existing_authors and random.choice([True, False]):
                 Author.objects.create(user=user)
 
     def create_content(self, num_content=20):

@@ -7,7 +7,7 @@ from .models import User, PaymentSubscription
 
 class UserTestCase(TestCase):
     def setUp(self):
-        self.user = User.objects.create(phone_number='1234567890', email='test@example.com')
+        self.user = User.objects.create(phone_number='1234567890', password='testpassword')
         self.subscription = PaymentSubscription.objects.create(
             user=self.user,
             amount=100,

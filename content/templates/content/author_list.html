@@ -12,10 +12,10 @@
                             <img src="{{ object.user.avatar|mymedia }}" class="card-img-top" alt="...">
                         </div>
                             <div class="card-body">
-                                <h2 class="card-title">{{ author.user.full_name }}</h2>
-                                <p class="card-text"><strong>Exists since:</strong> {{ author.exists_since }}</p>
-                                <p class="card-text"><strong>Article Count:</strong> {{ author.article_count }}</p>
-                                <a href="{% url 'content:author_detail' author.pk %}" class="btn btn-info">View Author</a>
+                                <h2 class="card-title">{{ object.user.full_name }}</h2>
+                                <p class="card-text"><strong>Exists since:</strong> {{ object.exists_since }}</p>
+                                <p class="card-text"><strong>Article Count:</strong> {{ object.article_count }}</p>
+                                <a href="{% url 'content:author_detail' object.pk %}" class="btn btn-info">View Author</a>
                             </div>
                         </div>
                     {% empty %}

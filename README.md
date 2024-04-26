@@ -55,6 +55,10 @@ This project is a Django-based web application designed to manage user subscript
     celery -A config beat -l info -S django
     ```
 
+## If using docker
+
+1. 
+
 ## Usage
 
 1. Go to the application's main page: [http://localhost:8000/](http://localhost:8000/)
