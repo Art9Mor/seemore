@@ -71,4 +71,3 @@ class Report(models.Model):
     class Meta:
         verbose_name = 'Report'
         verbose_name_plural = 'Reports'
-        unique_together = (('content', 'user'),)
