@@ -1,8 +1,6 @@
 from django import forms
-from django_select2.forms import ModelSelect2Widget
 
 from content.models import Content, Author
-from users.models import User
 
 
 class StyleFormMixin:
@@ -20,7 +18,7 @@ class ContentForm(StyleFormMixin, forms.ModelForm):
 
     class Meta:
         model = Content
-        exclude = ['is_active', 'views_count']
+        exclude = ['is_active', 'views_count', 'author', 'slug']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

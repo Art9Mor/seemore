@@ -14,9 +14,15 @@ class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.DO_NOTHING, verbose_name='User')
     exists_since = models.DateField(auto_now_add=True, verbose_name='Exists since')
     article_count = models.PositiveIntegerField(default=0, verbose_name='Article count')
+    nickname = models.CharField(max_length=255, verbose_name='Nickname', blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.nickname:
+            self.nickname = self.user.full_name
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'Author: {self.user.full_name}'
+        return f'Author: {self.nickname}'
 
     class Meta:
         verbose_name = 'Author'
@@ -36,6 +42,7 @@ class Content(models.Model):
     paid_only = models.BooleanField(default=False, verbose_name='Paid only')
     is_active = models.BooleanField(default=True, verbose_name='Is published')
     views_count = models.IntegerField(default=0, verbose_name='Views')
+    num_reports = models.IntegerField(default=0, verbose_name='Reports')
 
     def __str__(self):
         return f'Article: {self.category}/{self.title}'

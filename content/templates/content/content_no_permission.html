@@ -1,21 +1,13 @@
 {% extends 'content/base.html' %}
 
 {% block content %}
-    <div class="album py-5 bg-body-tertiary">
-        <div class="container col-3">
-            <div class="row">
-                <div class="col-auto">
-                    <div class="card">
-                        <div class="card-body">
-                            <form method="post">
-                                {% csrf_token %}
-                                <p>Delete the report "{{ object.title }}"?</p>
-                                <button type="submit" class="btn btn-danger">Confirm</button>
-                                <a href="{% url 'content:home' %}" class="btn btn-success">Cancel</a>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title">You do not have permissions!</h1>
+            </div>
+            <div class="card-footer">
+                <a href="#" onclick="history.back()" class="btn btn-primary">Go back</a>
             </div>
         </div>
     </div>

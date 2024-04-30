@@ -2,51 +2,57 @@
 {% load my_tags %}
 
 {% block content %}
-    <section class="py-5 text-center container">
-        <div class="row py-lg-5">
-            <div class="col-lg-6 col-md-8 mx-auto">
-                <h1 class="fw-light">{{ object.title }}</h1>
-            </div>
-        </div>
-    </section>
-
     <div class="container">
-        <div class="row g-0 bg-body-secondary position-relative">
-            {% if object.image %}
-                <div class="col-md-6 mb-md-0 p-md-4">
-                    <img src="{{ object.image|mymedia }}" class="w-100" alt="...">
-                </div>
-            {% endif %}
-            <div class="col-md-6 p-4 ps-md-0">
-                <div class="mb-3">
-                    <h5 class="mt-0">Slug: {{ object.slug }}</h5>
-                    {% if object.category %}
-                        <p>Category: {{ object.category }}</p>
-                    {% endif %}
-                    {% if object.video_url %}
-                        <video controls>
-                            <source src="{{ object.video_url }}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                    {% endif %}
-                    <p>Content: {{ object.content }}</p>
-                    <p>Author: {{ object.author.full_name }}</p>
-                    <p>Views: {{ object.views_count }}</p>
-                    <p>Publication date: {{ object.created_at }}</p>
-                    {% if object.modified_at %}
-                        <p>Last update: {{ object.modified_at }}</p>
-                    {% endif %}
-                </div>
-                <div class="d-grid gap-2">
-                    <a type="button" class="btn btn-primary" href="{% url 'content:home' %}">To home</a>
-                    <a type="button" class="btn btn-info" href="{% url 'content:author_detail' object.author.pk %}">Author</a>
-                    <a type="button" class="btn btn-danger" href="{% url 'content:report_create' object.pk %}">Report</a>
-                    {% if object.author.user == request.user or user.is_superuser or user.is_staff %}
-                        <a type="button" class="btn btn-warning" href="{% url 'content:content_update' object.pk %}">Edit</a>
-                        <a type="button" class="btn btn-danger" href="{% url 'content:content_delete' object.pk %}">Delete</a>
-                    {% endif %}
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h1 class="card-title text-center mb-4">{{ object.title }}</h1>
+                        <div class="row">
+                            {% if object.image %}
+                                <div class="col-md-6">
+                                    <img src="{{ object.image|mymedia }}" class="img-fluid rounded" alt="...">
+                                </div>
+                            {% endif %}
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><strong>Slug:</strong> {{ object.slug }}</li>
+                                    {% if object.category %}
+                                        <li class="list-group-item"><strong>Category:</strong> {{ object.category }}</li>
+                                    {% endif %}
+                                    {% if object.video_url %}
+                                        <li class="list-group-item">
+                                            <video controls class="img-fluid">
+                                                <source src="{{ object.video_url }}" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        </li>
+                                    {% endif %}
+                                    <li class="list-group-item"><strong>Content:</strong> {{ object.content }}</li>
+                                    <li class="list-group-item"><strong>Author:</strong> {{ object.author.nickname }}</li>
+                                    <li class="list-group-item"><strong>Views:</strong> {{ object.views_count }}</li>
+                                    <li class="list-group-item"><strong>Publication date:</strong> {{ object.created_at }}</li>
+                                    {% if object.modified_at %}
+                                        <li class="list-group-item"><strong>Last update:</strong> {{ object.modified_at }}</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-center gap-3">
+                        <a href="{% url 'content:home' %}" class="btn btn-primary">To home</a>
+                        <a href="{% url 'content:author_detail' object.author.pk %}" class="btn btn-info">Author</a>
+                        <a href="{% url 'content:report_create' object.pk %}" class="btn btn-danger">Report</a>
+                        {% if object.author.user == request.user or user.is_superuser or user.is_staff %}
+                            <a href="{% url 'content:content_update' object.pk %}" class="btn btn-warning">Edit</a>
+                            <a href="{% url 'content:content_delete' object.pk %}" class="btn btn-danger">Delete</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 {% endblock %}
+
+
+

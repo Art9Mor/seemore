@@ -55,9 +55,19 @@ This project is a Django-based web application designed to manage user subscript
     celery -A config beat -l info -S django
     ```
 
-## If using docker
+### If using docker
 
-1. 
+1. Create docker  
+   
+   ```bash
+   docker compose build
+   ```
+
+2. Up/run docker
+
+   ```bash
+   docker compose up
+   ```
 
 ## Usage
 
@@ -129,4 +139,12 @@ python manage.py test
       ```bash
       python3 manage.py populate_db
       ```
-   This command will fill your database by test data.
+   This command will fill your database by test data.  
+
+## Stack
+
+- python
+- postgresql
+- django
+- docker
+- stripe

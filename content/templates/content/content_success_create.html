@@ -1,0 +1,15 @@
+{% extends 'content/base.html' %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title">You have successfully created your content!</h1>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'content:content_create' %}" class="btn btn-success">Create new content</a>
+                <a href="{% url 'content:home' %}" class="btn btn-primary">Go to home page end see more!</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

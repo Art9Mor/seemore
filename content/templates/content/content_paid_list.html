@@ -7,10 +7,12 @@
             <div class="col-lg-6 col-md-8 mx-auto">
                 <p class="lead text-body-secondary">
                     Here you can see all paid content of our authors.
+                    {% if user.is_author %}
                         <p>Also you can
                             <a type="button" class="btn btn-link"
                                href="{% url 'content:content_create' %}">create your content</a>
                         </p>
+                    {% endif %}
                 </p>
             </div>
         </div>

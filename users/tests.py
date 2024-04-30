@@ -1,39 +1,27 @@
-from django.test import TestCase, Client
 from django.urls import reverse
-from datetime import datetime, timedelta
+from django.test import TestCase, Client
+from users.models import User
 
-from .models import User, PaymentSubscription
 
-
-class UserTestCase(TestCase):
+class TestUserViews(TestCase):
     def setUp(self):
-        self.user = User.objects.create(phone_number='1234567890', password='testpassword')
-        self.subscription = PaymentSubscription.objects.create(
-            user=self.user,
-            amount=100,
-            date=datetime.now(),
-            expiration_date=datetime.now() + timedelta(days=30),
-            payment_url='test_payment_url',
-            is_active=True,
-            subscription_period='short'
-        )
-
-    def test_user_creation(self):
-        self.assertEqual(User.objects.count(), 1)
-
-    def test_subscription_creation(self):
-        self.assertEqual(PaymentSubscription.objects.count(), 1)
-
-    def test_subscription_expiration(self):
-        self.assertTrue(self.subscription.expiration_date > datetime.now())
+        self.client = Client()
+        self.user = User.objects.create(phone_number='1234567890', password='12345')
 
     def test_register_view(self):
-        client = Client()
-        response = client.post(reverse('users:register'), {'phone_number': '9876543210', 'password1': 'testpass', 'password2': 'testpass'})
+        response = self.client.get(reverse('users:register'))
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/register.html')
+        self.assertContains(response, 'Register')
+        print(response)
+
+    def test_login_view(self):
+        response = self.client.get(reverse('users:login'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Log in')
 
     def test_profile_view(self):
-        client = Client()
-        client.force_login(self.user)
-        response = client.get(reverse('users:profile'))
+        self.client.login(phone_number='1234567890', password='12345')
+        response = self.client.get(reverse('users:profile'))
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Profile')

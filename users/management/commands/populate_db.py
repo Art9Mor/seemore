@@ -37,7 +37,10 @@ class Command(BaseCommand):
         existing_authors = [author.user_id for author in authors]
         for user in users:
             if user.id not in existing_authors and random.choice([True, False]):
-                Author.objects.create(user=user)
+                author = Author.objects.create(user=user)
+                if author:
+                    user.is_author = True
+                    user.save()
 
     def create_content(self, num_content=20):
         authors = Author.objects.all()

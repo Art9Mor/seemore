@@ -21,6 +21,9 @@
                             {% else %}
                                 <a href="{% url 'users:subscription' %}" class="btn btn-warning">Subscribe</a>
                             {% endif %}
+                            {% if not user.is_author %}
+                                <button type="submit" formaction="{% url 'content:become_author' %}" class="btn btn-warning">Become an author</button>
+                            {% endif %}
                             {% if not user.is_superuser and not user.is_staff %}
                                 <a href="{% url 'users:are_you_sure' %}" class="btn btn-danger">Delete account</a>
                             {% endif %}

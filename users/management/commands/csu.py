@@ -15,6 +15,7 @@ class Command(BaseCommand):
             email='seemore@symple.mail',
             full_name='Amadey Mozart',
             is_author=True,
+            is_subscribed=True,
             is_active=True,
             is_staff=True,
             is_superuser=True

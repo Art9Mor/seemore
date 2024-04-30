@@ -1,15 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
-from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import PageNotAnInteger, EmptyPage
-from django.http import Http404, JsonResponse
-from django.shortcuts import render
+from django.http import Http404
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView, View
 from pytils.translit import slugify
 
-from users.models import PaymentSubscription, User
+from users.models import PaymentSubscription
 from .forms import ContentForm
 from .models import Content, Report, Author
 from .paginators import ContentPaginator
@@ -106,7 +104,7 @@ class ContentCreateView(LoginRequiredMixin, CreateView):
     model = Content
     form_class = ContentForm
     template_name = 'content/content_form.html'
-    success_url = reverse_lazy('content:content_list')
+    success_url = reverse_lazy('content:content_success_create')
     extra_context = {
         'title': 'Create Content',
     }
@@ -115,10 +113,11 @@ class ContentCreateView(LoginRequiredMixin, CreateView):
         if form.is_valid():
             instance = form.save(commit=False)
             if self.request.user.is_author:
-                instance.author = self.request.user
+                author = self.request.user.author
+                instance.author = author
                 instance.slug = slugify(instance.title)
                 instance.save()
-                author = self.request.user.author
+
                 author.article_count += 1
                 author.save()
                 messages.success(self.request, 'Content created successfully!')
@@ -208,6 +207,7 @@ class ReportCreateView(LoginRequiredMixin, CreateView):
     """
     model = Report
     fields = ['content', 'comment']
+    template_name = 'content/report_form.html'
     success_url = reverse_lazy('content:content_list')
     extra_context = {
         'title': 'Create Report',
@@ -226,6 +226,10 @@ class ReportCreateView(LoginRequiredMixin, CreateView):
         if self.request.user.is_superuser or self.request.user.groups.filter(name='Moderators').exists():
             context['user'] = self.request.user
         return context
+
+
+def content_success_create(request):
+    return render(request, 'content/content_success_create.html')
 
 
 class ReportDeleteView(PermissionRequiredMixin, DeleteView):
@@ -282,22 +286,25 @@ class ReportDetailView(LoginRequiredMixin, DetailView):
 
 
 class BecomeAuthorView(LoginRequiredMixin, View):
+    """
+    Creating an instance of the Author class for a user.
+    """
     def post(self, request, *args, **kwargs):
         user = request.user
 
         if user.is_author:
-            return JsonResponse({'message': 'You are already an author.'}, status=400)
+            return redirect('users:profile')
+
+        author, created = Author.objects.get_or_create(user=user)
 
         user.is_author = True
         user.save()
 
-        author = Author.objects.create(user=user)
+        return redirect('content:an_author')
 
-        content_type = ContentType.objects.get_for_model(User)
-        permission = Permission.objects.get(content_type=content_type, codename='add_content')
-        user.user_permissions.add(permission)
 
-        return JsonResponse({'message': 'You have become an author!'})
+def an_author(request):
+    return render(request, 'content/an_author.html')
 
 
 class AuthorListView(ListView):
