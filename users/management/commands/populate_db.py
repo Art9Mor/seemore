@@ -22,7 +22,8 @@ class Command(BaseCommand):
         for _ in range(num_users):
             phone_number = f'+7900{random.randint(1000000, 9999999)}'
             email = f'user{random.randint(1000, 9999)}@example.com'
-            user = User.objects.create(phone_number=phone_number, email=email, password='password123')
+            password = 'password123'
+            user = User.objects.create_user(phone_number=phone_number, email=email, password=password)
             if random.choice([True, False]):
                 PaymentSubscription.objects.create(
                     user=user,

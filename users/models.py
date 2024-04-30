@@ -1,12 +1,18 @@
 from datetime import timedelta
 
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import RegexValidator
 from django.db import models
 
 NULLABLE = {
     'blank': True,
     'null': True,
 }
+
+phone_number_validator = RegexValidator(
+    regex=r'^[\d\+\-]+$',
+    message='Phone number can only contain digits, +, and - characters.'
+)
 
 SUBSCRIPTION_PERIOD = [
     ('short', 'Short'),
@@ -19,7 +25,7 @@ class User(AbstractUser):
     username = None
 
     full_name = models.CharField(max_length=255, verbose_name="Full Name", default='Noname')
-    phone_number = models.CharField(max_length=20, unique=True, verbose_name='Phone Number')
+    phone_number = models.CharField(max_length=20, unique=True, verbose_name='Phone Number', validators=[phone_number_validator])
     email = models.EmailField(unique=True, verbose_name='Email', **NULLABLE)
     avatar = models.ImageField(upload_to='users/', verbose_name='Avatar', **NULLABLE)
     is_author = models.BooleanField(default=False)

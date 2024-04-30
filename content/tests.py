@@ -7,7 +7,7 @@ from .models import Content, Author, Report
 class TestContentViews(TestCase):
     def setUp(self):
         self.client = Client()
-        self.user = get_user_model().objects.create_user(username='testuser', password='12345')
+        self.user = get_user_model().objects.create(phone_number='+79856783526', password='12345')
         self.author = Author.objects.create(user=self.user)
         self.content = Content.objects.create(
             author=self.author,
@@ -29,6 +29,7 @@ class TestContentViews(TestCase):
             comment='This is a test report.',
             screenshots='test_screenshot.jpg'
         )
+        self.client.force_login(self.user)
 
     def test_home_view(self):
         response = self.client.get(reverse('content:home'))
@@ -44,3 +45,24 @@ class TestContentViews(TestCase):
         response = self.client.get(reverse('content:content_detail', kwargs={'pk': self.content.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.content.title)
+
+    def test_content_update_view(self):
+        response = self.client.get(reverse('content:content_update', kwargs={'pk': self.content.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.content.title)
+        response = self.client.post(reverse('content:content_update', kwargs={'pk': self.content.pk}))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('content:home'))
+
+    def test_content_update(self):
+        new_title = 'Updated Test Article'
+        new_content = 'This is an updated test article.'
+        updated_data = {
+            'title': new_title,
+            'content': new_content,
+        }
+        response = self.client.post(reverse('content:content_update', kwargs={'pk': self.content.pk}), updated_data)
+        self.assertEqual(response.status_code, 302)
+        updated_content = Content.objects.get(pk=self.content.pk)
+        self.assertEqual(updated_content.title, new_title)
+        self.assertEqual(updated_content.content, new_content)
