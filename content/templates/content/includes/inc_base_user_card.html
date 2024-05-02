@@ -1,0 +1,43 @@
+{% if user.is_authenticated %}
+    <div class="container mt-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">User Information</h5>
+                <p class="card-text">Full Name: {{ user.full_name }}</p>
+                <p class="card-text">Phone Number: {{ user.phone_number }}</p>
+                {% if user.is_author %}
+                    <p class="card-text">Status: Author</p>
+                {% else %}
+                    <p class="card-text">Status: Reader</p>
+                {% endif %}
+                {% if user.email %}
+                    <p class="card-text">Email: {{ user.email }}</p>
+                {% endif %}
+                {% if user.is_subscribed %}
+                    <p class="card-text">Have Subscription</p>
+                {% endif %}
+            </div>
+            <div class="card-footer d-flex justify-content-center">
+                <a href="{% url 'users:profile' %}" class="btn btn-primary me-2">Edit profile</a>
+                {% if not user.is_subscribed %}
+                    <a href="{% url 'users:subscription' %}" class="btn btn-success me-2">Subscribe now!</a>
+                {% endif %}
+                {% if not user.is_author %}
+                    <a href="{% url 'content:become_author' %}" class="btn btn-primary me-2">Become author</a>
+                {% else %}
+                    {% if user.is_author and user.author.content_set.exists %}
+                        <a href="{% url 'content:author_content' user.author.pk %}" class="btn btn-primary me-2">My
+                            content</a>
+                    {% endif %}
+                    <a href="{% url 'content:content_create' %}" class="btn btn-success me-2">New content</a>
+                {% endif %}
+                <form method="post" action="{% url 'users:logout' %}">
+                    {% csrf_token %}
+                    <button href="{% url 'users:logout' %}" class="btn btn-danger" type="submit">
+                        Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endif %}

@@ -21,14 +21,16 @@ urlpatterns = [
 
     # Author URLs
     path('author_list/', views.AuthorListView.as_view(), name='author_list'),
-    path('author/update/<int:pk>/', views.AuthorUpdateView.as_view(), name='author_update'),
     path('become_author/', views.BecomeAuthorView.as_view(), name='become_author'),
     path('author/detail/<int:pk>/', views.AuthorDetailView.as_view(), name='author_detail'),
     path('an_author/', views.an_author, name='an_author'),
+    path('author/delete/<int:pk>/', views.AuthorDeleteView.as_view(), name='author_delete'),
+    path('<int:pk>/author_content/', views.author_content, name='author_content'),
 
     # Report URLs
-    path('reports/', views.ReportListView.as_view(), name='report_list'),
+    path('content/<int:pk>/reports/', views.ReportListView.as_view(), name='report_list'),
     path('report/<int:pk>/', views.ReportDetailView.as_view(), name='report_detail'),
     path('report/create/<int:pk>/', views.ReportCreateView.as_view(), name='report_create'),
     path('report/delete/<int:pk>/', views.ReportDeleteView.as_view(), name='report_delete'),
+    path('report_success_create/', views.report_success_create, name='report_success_create'),
 ]

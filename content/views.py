@@ -1,14 +1,15 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from django.core.paginator import PageNotAnInteger, EmptyPage
-from django.http import Http404
-from django.shortcuts import render, redirect
+from django.db.models import Q
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView, View
 from pytils.translit import slugify
 
 from users.models import PaymentSubscription
-from .forms import ContentForm
+from .forms import ContentForm, ReportForm
 from .models import Content, Report, Author
 from .paginators import ContentPaginator
 
@@ -47,17 +48,6 @@ class ContentListView(ListView):
         'title': 'Content List',
     }
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        if not self.request.user.is_authenticated:
-            return queryset.filter(paid_only=False)
-        else:
-            user_subscribed = PaymentSubscription.objects.filter(user=self.request.user, is_active=True).exists()
-            if user_subscribed:
-                return queryset
-            else:
-                return queryset.filter(paid_only=False)
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         paginator = ContentPaginator(self.object_list, self.paginate_by)
@@ -89,12 +79,26 @@ class ContentDetailView(DetailView):
     }
 
     def get_object(self, queryset=None):
-        self.obj = super().get_object(queryset)
-        self.obj.views_count += 1
-        self.obj.save()
-        if self.obj.paid_only and not self.request.user.is_subscribed:
-            raise Http404("Content not found")
-        return self.obj
+        self.object = super().get_object(queryset)
+        self.object.views_count += 1
+        self.object.save()
+        if self.object.paid_only:
+            user = self.request.user
+            if user.is_authenticated:
+                if user.is_superuser or user.is_staff or user.is_subscribed or user == self.object.author.user:
+                    return self.object
+                else:
+                    return redirect(reverse('users:must_subscribe'))
+            else:
+                return redirect(reverse('users:must_register'))
+        return self.object
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if isinstance(self.object, Content):
+            context['author'] = self.object.author
+        context['title'] = 'Content Detail'
+        return context
 
 
 class ContentCreateView(LoginRequiredMixin, CreateView):
@@ -120,7 +124,6 @@ class ContentCreateView(LoginRequiredMixin, CreateView):
 
                 author.article_count += 1
                 author.save()
-                messages.success(self.request, 'Content created successfully!')
                 return super().form_valid(form)
             else:
                 messages.error(self.request, 'You are not authorized to create content.')
@@ -139,7 +142,8 @@ class ContentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         content = self.get_object()
-        return self.request.user == content.author
+        user = self.request.user
+        return user == content.author.user
 
     def handle_no_permission(self):
         return render(self.request, 'content/content_no_permission.html')
@@ -177,21 +181,28 @@ class ContentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
         return False
 
 
-class ContentPaidListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+class ContentPaidListView(LoginRequiredMixin, ListView):
+    """
+    List all paid content.
+    """
     model = Content
     template_name = 'content/content_paid_list.html'
     context_object_name = 'content_paid_list'
     paginate_by = 9
 
-    def test_func(self):
-        user = self.request.user
-        return user.is_superuser or user.is_staff or (user.is_authenticated and user.is_subscribed)
-
     def get_queryset(self):
         return Content.objects.filter(paid_only=True)
 
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse_lazy('users:must_register'))
+        return super().dispatch(request, *args, **kwargs)
+
 
 class ContentFreeListView(ListView):
+    """
+    List all free content.
+    """
     model = Content
     template_name = 'content/content_free_list.html'
     context_object_name = 'content_free_list'
@@ -202,33 +213,45 @@ class ContentFreeListView(ListView):
 
 
 class ReportCreateView(LoginRequiredMixin, CreateView):
-    """
-    Create a new report.
-    """
     model = Report
-    fields = ['content', 'comment']
+    form_class = ReportForm
     template_name = 'content/report_form.html'
-    success_url = reverse_lazy('content:content_list')
+    success_url = reverse_lazy('content:report_success_create')
     extra_context = {
         'title': 'Create Report',
     }
 
     def form_valid(self, form):
         if form.is_valid():
+            content_pk = self.kwargs.get('pk')
+            content = Content.objects.get(pk=content_pk)
             instance = form.save(commit=False)
-            instance.author = self.request.user
-            instance.slug = slugify(instance.title)
+            instance.user = self.request.user
+            instance.content = content
+            instance.slug = content.slug
             instance.save()
+            return redirect('content:report_success_create')
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.request.user.is_superuser or self.request.user.groups.filter(name='Moderators').exists():
-            context['user'] = self.request.user
+        content_pk = self.kwargs.get('pk')
+        content = Content.objects.get(pk=content_pk)
+        context['content'] = content
         return context
 
 
+def report_success_create(request):
+    """
+    Report creation success message
+    """
+    return render(request, 'content/report_success_create.html')
+
+
 def content_success_create(request):
+    """
+    Content creation success message.
+    """
     return render(request, 'content/content_success_create.html')
 
 
@@ -245,18 +268,17 @@ class ReportDeleteView(PermissionRequiredMixin, DeleteView):
         Determine if a user is allowed to delete a report.
         """
         if super().has_permission():
-            # Check if the user is a moderator or superuser
             return self.request.user.is_superuser or self.request.user.groups.filter(name='Moderators').exists()
         return False
 
 
 class ReportListView(LoginRequiredMixin, ListView):
     """
-    List all reports.
+    List all reports for a specific content.
     """
     model = Report
     template_name = 'content/report_list.html'
-    context_object_name = 'reports'
+    context_object_name = 'object_list'
     extra_context = {
         'title': 'Report List',
     }
@@ -266,16 +288,23 @@ class ReportListView(LoginRequiredMixin, ListView):
         return user.is_superuser or user.is_staff
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        content_id = self.kwargs.get('content_id')
-        queryset = queryset.filter(content_id=content_id)
+        content_pk = self.kwargs.get('pk')
+        content_item = get_object_or_404(Content, pk=content_pk)
+        queryset = super().get_queryset().filter(content=content_item)
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        content_pk = self.kwargs.get('pk')
+        content_item = get_object_or_404(Content, pk=content_pk)
+        context['content'] = content_item
+        context['title'] = f'Reports for Article: {content_item.category}/{content_item.title}/{content_item.author.nickname}'
+        return context
 
 
 class ReportDetailView(LoginRequiredMixin, DetailView):
     model = Report
     template_name = 'content/report_detail.html'
-    context_object_name = 'report_detail'
     extra_context = {
         'title': 'Report Detail',
     }
@@ -289,6 +318,7 @@ class BecomeAuthorView(LoginRequiredMixin, View):
     """
     Creating an instance of the Author class for a user.
     """
+
     def post(self, request, *args, **kwargs):
         user = request.user
 
@@ -304,6 +334,9 @@ class BecomeAuthorView(LoginRequiredMixin, View):
 
 
 def an_author(request):
+    """
+    Message about successful becoming an author.
+    """
     return render(request, 'content/an_author.html')
 
 
@@ -325,5 +358,23 @@ class AuthorDetailView(DetailView):
     }
 
 
-class AuthorUpdateView(LoginRequiredMixin, UpdateView):
+class AuthorDeleteView(PermissionRequiredMixin, DeleteView):
     model = Author
+    success_url = reverse_lazy('content:author_list')
+    permission_required = 'content.delete_author'
+
+    def test_func(self):
+        if super().has_permission():
+            return self.request.user.is_superuser or self.request.user.groups.filter(name='Moderators').exists()
+        return False
+
+
+def author_content(request, pk):
+    author_item = Author.objects.get(pk=pk)
+    context = {
+        'object_list': Content.objects.filter(author=author_item),
+        'author': author_item.pk,
+        'title': f'All content of {author_item.nickname}',
+    }
+    return render(request, 'content/author_content.html', context)
+

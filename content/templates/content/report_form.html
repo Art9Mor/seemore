@@ -2,25 +2,21 @@
 
 {% block content %}
     <div class="album py-5 bg-body-tertiary">
-        <div class="container col-4">
-            <div class="row">
-                <div class="col-auto">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            {% if object %}
-                                <h3 class="card-title">Create report</h3>
-                            {% endif %}
+                            <h3 class="card-title">Create report</h3>
                         </div>
                         <div class="card-body">
                             <form method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 {{ form.as_p }}
-                                <button type="submit" class="btn btn-success">
-                                    {% if object %}
-                                        Create
-                                    {% endif %}
-                                </button>
-                                <a type="button" class="btn btn-danger" href="#" onclick="history.back()">Cancel</a>
+                                <div class="d-flex justify-content-between mt-3">
+                                    <button type="submit" class="btn btn-success">Create</button>
+                                    <a type="button" class="btn btn-danger" href="#" onclick="history.back()">Cancel</a>
+                                </div>
                             </form>
                         </div>
                     </div>

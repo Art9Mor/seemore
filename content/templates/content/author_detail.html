@@ -21,7 +21,7 @@
             {% if user.is_superuser or user.is_staff %}
                 <a href="{% url 'content:author_delete' object.pk %}" class="btn btn-danger mr-2">Delete Author</a>
             {% endif %}
-            <a href="{% url 'content:content_list' %}?author={{ object.user.pk }}" class="btn btn-primary mr-2">
+            <a href="{% url 'content:content_list' %}?author={{ author.pk }}" class="btn btn-primary mr-2">
                 View Content
             </a>
             <a href="#" onclick="history.back()" class="btn btn-secondary">Back</a>

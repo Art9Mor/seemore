@@ -72,11 +72,12 @@ This project is a Django-based web application designed to manage user subscript
 ## Usage
 
 1. Go to the application's main page: [http://localhost:8000/](http://localhost:8000/)
-2. Register or log in if you already have an account.
+2. Register or log in if you already have an account. Phone number can only contain digits, +, and - characters.
 3. Use the application's features such as profile management, subscription creation and cancellation.
 4. Unregistered user can only see free content
 5. A registered user sees free content, can become an author, and can subscribe that allows him to see paid content.
-6. Also registered user can temporarily deactivate his account, that may be activated again or deleted after 21 days.  
+6. Also registered user can temporarily deactivate his account, that may be activated again or deleted after 21 days. 
+7. The subscription can be deactivated ahead of schedule manually by the user.
 
 
 ## Subscription

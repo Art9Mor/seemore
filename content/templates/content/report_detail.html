@@ -4,32 +4,30 @@
 <div class="container mt-5">
     <div class="card">
         <div class="card-header">
-            <h1 class="mb-0">Reports</h1>
+            <h1 class="mb-0">Report Detail</h1>
         </div>
         <div class="card-body">
-            {% for object in object_list %}
             <div class="card mb-3">
                 <div class="card-body">
-                    <p class="card-text">Report from: {{ report.user.full_name }}</p>
-                    <p class="card-text">Created at: {{ report.created_at }}</p>
-                    <p class="card-text">Title: {{ report.title }}</p>
-                    <p class="card-text">Comment: {{ report.comment }}</p>
-                    {% if report.screenshots %}
+                    <p class="card-text">Report for
+                        Article: {{ object.content.category }}/{{ object.content.title }}/{{ object.content.author.nickname }}</p>
+                    <p class="card-text">Created at: {{ object.created_at }}</p>
+                    <p class="card-text">Title: {{ object.title }}</p>
+                    <p class="card-text">Comment: {{ object.comment }}</p>
+                    {% if object.screenshots %}
                         <div class="mt-3">
                             <h5 class="card-title">Screenshots:</h5>
-                            {% for screenshot in report.screenshots.all %}
+                            {% for screenshot in object.screenshots.all %}
                                 <img src="{{ screenshot.url }}" alt="Screenshot" class="img-fluid">
                             {% endfor %}
                         </div>
                     {% endif %}
                 </div>
             </div>
-            {% empty %}
-            <p class="text-muted">No reports found.</p>
-            {% endfor %}
+
         </div>
         <div class="card-footer">
-            <a href="{% url 'content:report_delete' obj.pk %}" class="btn btn-danger">Delete report</a>
+            <a href="{% url 'content:report_delete' object.pk %}" class="btn btn-danger">Delete report</a>
             <a href="#" onclick="history.back()" class="btn btn-secondary">Back</a>
         </div>
     </div>

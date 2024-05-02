@@ -73,7 +73,7 @@ class Report(models.Model):
                 content.save()
 
     def __str__(self):
-        return f'Report from {self.user.full_name}'
+        return f'Report for Article: {self.content.category}/{self.content.title}/{self.content.author.nickname}'
 
     class Meta:
         verbose_name = 'Report'

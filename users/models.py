@@ -26,7 +26,7 @@ class User(AbstractUser):
 
     full_name = models.CharField(max_length=255, verbose_name="Full Name", default='Noname')
     phone_number = models.CharField(max_length=20, unique=True, verbose_name='Phone Number', validators=[phone_number_validator])
-    email = models.EmailField(unique=True, verbose_name='Email', **NULLABLE)
+    email = models.EmailField(unique=False, verbose_name='Email', **NULLABLE)
     avatar = models.ImageField(upload_to='users/', verbose_name='Avatar', **NULLABLE)
     is_author = models.BooleanField(default=False)
     is_subscribed = models.BooleanField(default=False, verbose_name="Subscription")

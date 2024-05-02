@@ -6,16 +6,8 @@
         <li><button onclick="window.location.href='{% url 'content:content_free_list' %}'" class="btn btn-link text-white">Free content</button></li>
         <li><button onclick="window.location.href='{% url 'content:author_list' %}'" class="btn btn-link text-white">Authors</button></li>
         <li><button onclick="window.location.href='{% url 'content:home' %}'" class="btn btn-link text-white">Home page</button></li>
-        {% if user.is_authenticated %}
-            <li><button onclick="window.location.href='{% url 'users:profile' %}'" class="btn btn-link text-white">Profile</button></li>
-            <li>
-                <form method="post" action="{% url 'users:logout' %}">
-                    {% csrf_token %}
-                    <button class="btn btn-link text-danger" type="submit">Logout</button>
-                </form>
-            </li>
-        {% else %}
-            <li><button onclick="window.location.href='{% url 'users:register' %}'" class="btn btn-link text-white">Registration</button></li>
+        {% if not user.is_authenticated %}
+            <li><button onclick="window.location.href='{% url 'users:register' %}'" class="btn btn-link text-capitalize">Registration</button></li>
             <li><button onclick="window.location.href='{% url 'users:login' %}'" class="btn btn-link text-success">Login</button></li>
         {% endif %}
         {% if user.is_authenticated and not user.is_subscribed %}

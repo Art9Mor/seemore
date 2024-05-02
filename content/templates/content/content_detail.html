@@ -41,12 +41,16 @@
                     </div>
                     <div class="card-footer d-flex justify-content-center gap-3">
                         <a href="{% url 'content:home' %}" class="btn btn-primary">To home</a>
-                        <a href="{% url 'content:author_detail' object.author.pk %}" class="btn btn-info">Author</a>
-                        <a href="{% url 'content:report_create' object.pk %}" class="btn btn-danger">Report</a>
+                        <a href="{% url 'content:author_detail' author.pk %}" class="btn btn-info">Author</a>
+                        <a href="{% url 'content:report_create' content.pk %}" class="btn btn-danger">Report this content</a>
+                        {% if user.is_superuser or user.is_staff %}
+                            <a href="{% url 'content:report_list' object.pk%}" class="btn btn-info">Look at reports</a>
+                        {% endif %}
                         {% if object.author.user == request.user or user.is_superuser or user.is_staff %}
                             <a href="{% url 'content:content_update' object.pk %}" class="btn btn-warning">Edit</a>
                             <a href="{% url 'content:content_delete' object.pk %}" class="btn btn-danger">Delete</a>
                         {% endif %}
+                        <a href="#" onclick="history.back()" class="btn btn-success">Back</a>
                     </div>
                 </div>
             </div>

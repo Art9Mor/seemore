@@ -2,6 +2,7 @@ import os
 
 from django.core.management import BaseCommand
 
+from content.models import Author
 from users.models import User
 
 
@@ -22,3 +23,5 @@ class Command(BaseCommand):
         )
         user.set_password(os.getenv('SUPERUSER_PASSWORD'))
         user.save()
+
+        author, created = Author.objects.get_or_create(user=user, defaults={'nickname': user.full_name})

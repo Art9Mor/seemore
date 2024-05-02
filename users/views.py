@@ -57,7 +57,7 @@ class ProfileView(LoginRequiredMixin, UpdateView):
     """
     model = User
     form_class = UserUpdateForm
-    success_url = reverse_lazy('users:profile')
+    success_url = reverse_lazy('users:user_success_update')
 
     def get_object(self, queryset=None):
         return self.request.user
@@ -85,6 +85,10 @@ def are_you_sure(request):
 
 def user_success_delete(request):
     return render(request, 'users/user_success_delete.html')
+
+
+def user_success_update(request):
+    return render(request, 'users/user_success_update.html')
 
 
 class CreatePaymentSubscriptionView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -210,6 +214,20 @@ class CancelSubscriptionView(LoginRequiredMixin, View):
         """
         form = CancelSubscriptionForm()
         return render(request, self.template_name, {'form': form})
+
+
+def must_subscribe(request):
+    """
+    View for checking if a subscription is still active
+    """
+    return render(request, 'users/must_subscribe.html')
+
+
+def must_register(request):
+    """
+    View for checking if a registration
+    """
+    return render(request, 'users/must_register.html')
 
 
 def stop_payment(request):

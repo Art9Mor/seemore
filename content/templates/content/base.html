@@ -106,6 +106,7 @@
                             </form>
                         </div>
                     </nav>
+                   {% include 'content/includes/inc_base_user_card.html' %}
                 </div>
                 {% include 'content/includes/inc_base_main_menu.html' %}
             </div>
@@ -139,7 +140,7 @@
                     {% if user.is_authenticated and not user.is_subscribed %}
                         Enjoy and <p>
                         <a type="button" class="btn btn-link"
-                                   href="{% url 'users:subscription' %}">SUBSCRIBE</a>
+                           href="{% url 'users:subscription' %}">SUBSCRIBE</a>
                     </p>
                         to <strong>SEE MORE</strong>!
                     {% else %}
@@ -149,13 +150,7 @@
             </div>
         </div>
     </section>
-{#    <section class="py-5 text-center container">#}
-{#        <div class="row py-lg-5">#}
-{#            <div class="col-lg-6 col-md-8 mx-auto">#}
-{#                <h3 class="fw-light">{{ title }}</h3>#}
-{#            </div>#}
-{#        </div>#}
-{#    </section>#}
+
 
     <div class="album py-5 bg-body-tertiary">
         <div class="container">
