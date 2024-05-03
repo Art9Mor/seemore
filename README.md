@@ -153,7 +153,7 @@ python manage.py test
       ```bash
       python3 manage.py cgu
       ```  
-   cgm - Create Gamma User. Gamma user hase no subscription and he isn't author.  
+   cgu - Create Gamma User. Gamma user hase no subscription and he isn't author.  
 
       ```bash
       python3 manage.py cau
