@@ -28,13 +28,19 @@ This project is a Django-based web application designed to manage user subscript
         POSTGRES_DB=your_database_name
         POSTGRES_USER=your_database_user
         POSTGRES_PASSWORD=your_database_password
+      
         CELERY_BROKER_URL=your_broker_url
         CELERY_RESULT_BACKEND=
+      
         STRIPE_PUBLIC_KEY=your_stripe_public_key
         STRIPE_SECRET_KEY=your_stripe_secret_key
         STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret_key
+      
         CACHE_ENABLED=True/False
-        CACHE_LOCATION=location_of_cache
+        CACHE_LOCATION=location_of_cache 
+       
+        SUPERUSER_PHONE=phone_number_for_superuser
+        SUPERUSER_PASSWORD=pasword_for_superuser
         ```
 
 4. Apply migrations:
@@ -171,4 +177,9 @@ python manage.py test
 - docker
 - stripe
 - celery
-- crispy_forms
+- crispy_forms  
+
+## Aftermath
+
+The project is at the finalization stage.  
+Write to us by email (art9mor@yande.ru) if you have any interesting proposals, and we will definitely consider them!
