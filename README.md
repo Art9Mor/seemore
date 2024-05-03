@@ -140,7 +140,28 @@ python manage.py test
       ```bash
       python3 manage.py populate_db
       ```
-   This command will fill your database by test data.  
+   This command will fill your database by test data.
+
+6. Creating users for testing  
+
+      ```bash
+      python3 manage.py cgu
+      ```  
+   cgm - Create Gamma User. Gamma user hase no subscription and he isn't author.  
+
+      ```bash
+      python3 manage.py cau
+      ```  
+   cau - Create Alpha User. Alpha is author ans he has got 1 free content but he hasn't got subscription.
+      ```bash
+      python3 manage.py cou
+      ```  
+   cou - Create Omega User. Omega user has ultra subscription but he isn't author.
+
+      ```bash
+      python3 manage.py cbu
+      ```
+   cbu - Create Brutal User. Brutal user is author with 1 free content and 1 pad content and he is subscribed.
 
 ## Stack
 
@@ -149,3 +170,5 @@ python manage.py test
 - django
 - docker
 - stripe
+- celery
+- crispy_forms

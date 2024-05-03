@@ -25,3 +25,5 @@ class Command(BaseCommand):
         user.save()
 
         author, created = Author.objects.get_or_create(user=user, defaults={'nickname': user.full_name})
+
+        self.stdout.write(self.style.SUCCESS('Successfully created super user.'))

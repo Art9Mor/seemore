@@ -1,6 +1,8 @@
 from django.contrib.auth.models import Permission
 from django.db import models
 from django.db.models import Count
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 
 from users.models import User
 
@@ -62,13 +64,14 @@ class Report(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Date of reporting')
     screenshots = models.ImageField(upload_to='screenshots/', verbose_name='Screenshots', **NULLABLE)
 
+    @classmethod
     def check_and_deactivate_content(cls):
         """
         Checks the number of complaints about the content and deactivates it if the number of complaints exceeds 5.
         """
-        content_with_reports = Content.objects.annotate(num_reports=Count('report'))
-        for content in content_with_reports:
-            if content.num_reports >= 5:
+        for content in Content.objects.all():
+            num_reports = Report.objects.filter(content=content).count()
+            if num_reports >= 5:
                 content.is_active = False
                 content.save()
 
@@ -78,3 +81,9 @@ class Report(models.Model):
     class Meta:
         verbose_name = 'Report'
         verbose_name_plural = 'Reports'
+
+
+@receiver(post_save, sender=Report)
+@receiver(post_delete, sender=Report)
+def update_content_activity(sender, instance, **kwargs):
+    Report.check_and_deactivate_content()
