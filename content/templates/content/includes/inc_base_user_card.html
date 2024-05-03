@@ -23,7 +23,10 @@
                     <a href="{% url 'users:subscription' %}" class="btn btn-success me-2">Subscribe now!</a>
                 {% endif %}
                 {% if not user.is_author %}
-                    <a href="{% url 'content:become_author' %}" class="btn btn-primary me-2">Become author</a>
+                    <form method="post" action="{% url 'content:become_author' %}">
+                        {% csrf_token %}
+                        <button type="submit" href="{% url 'content:become_author' %}" class="btn btn-success">Become an author</button>
+                    </form>
                 {% else %}
                     {% if user.is_author and user.author.content_set.exists %}
                         <a href="{% url 'content:author_content' user.author.pk %}" class="btn btn-primary me-2">My

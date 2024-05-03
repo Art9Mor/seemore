@@ -34,7 +34,7 @@ class Author(models.Model):
 class Content(models.Model):
     author = models.ForeignKey(Author, on_delete=models.DO_NOTHING, verbose_name='Author')
     category = models.CharField(max_length=150, verbose_name='Category', default='Unknown')
-    slug = models.CharField(unique=True, max_length=100, verbose_name='Slug', **NULLABLE)
+    slug = models.CharField(max_length=100, verbose_name='Slug', **NULLABLE)
     title = models.CharField(max_length=255, verbose_name='Title')
     content = models.TextField(verbose_name='Content', )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Created')
@@ -58,7 +58,7 @@ class Content(models.Model):
 class Report(models.Model):
     content = models.ForeignKey(Content, on_delete=models.CASCADE, verbose_name='Content to report')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, verbose_name='Reporting user', null=True)
-    slug = models.CharField(unique=True, max_length=100, verbose_name='Slug', **NULLABLE)
+    slug = models.CharField(max_length=100, verbose_name='Slug', **NULLABLE)
     title = models.CharField(max_length=255, verbose_name='Title')
     comment = models.TextField(verbose_name='Comment', **NULLABLE)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Date of reporting')

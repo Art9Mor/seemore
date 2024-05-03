@@ -91,11 +91,10 @@ def user_success_update(request):
     return render(request, 'users/user_success_update.html')
 
 
-class CreatePaymentSubscriptionView(LoginRequiredMixin, PermissionRequiredMixin, View):
+class CreatePaymentSubscriptionView(LoginRequiredMixin, View):
     """
     View for creating a payment subscription
     """
-    permission_required = 'content.add_paymentsubscription'
     template_name = 'users/subscription.html'
     success_url = reverse_lazy('users:payment_success')
 

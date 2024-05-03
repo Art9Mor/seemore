@@ -1,14 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from django.core.paginator import PageNotAnInteger, EmptyPage
-from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView, View
 from pytils.translit import slugify
 
-from users.models import PaymentSubscription
 from .forms import ContentForm, ReportForm
 from .models import Content, Report, Author
 from .paginators import ContentPaginator
@@ -176,9 +174,24 @@ class ContentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
         """
         Determine if a user is allowed to delete content.
         """
+        content = self.get_object()
+
         if super().has_permission():
-            return self.request.user.is_superuser or self.request.user.groups.filter(name='Moderators').exists()
+            return (
+                    self.request.user.is_superuser or
+                    self.request.user.groups.filter(name='Moderators').exists() or
+                    self.request.user == content.author.user
+                    )
         return False
+
+    def get_object(self, queryset=None):
+        """
+        Получение объекта контента для удаления и проверка доступа к нему.
+        """
+        obj = super().get_object(queryset)
+        if not obj.author.user == self.request.user:
+            raise Http404("You are not allowed to delete this content.")
+        return obj
 
 
 class ContentPaidListView(LoginRequiredMixin, ListView):
@@ -323,7 +336,7 @@ class BecomeAuthorView(LoginRequiredMixin, View):
         user = request.user
 
         if user.is_author:
-            return redirect('users:profile')
+            return redirect('users:home')
 
         author, created = Author.objects.get_or_create(user=user)
 
