@@ -22,7 +22,7 @@ This project is a Django-based web application designed to manage user subscript
 
 3. Set up environment variables:
 
-    - Create a `.env` file in the project root and specify the necessary environment variables:
+    - Create an `.env` file in the project root and specify the necessary environment variables:
 
         ```
         POSTGRES_DB=your_database_name
