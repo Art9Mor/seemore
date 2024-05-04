@@ -14,7 +14,7 @@ class Command(BaseCommand):
         user = User.objects.create(
             phone_number='+6-666-666-66-13',
             email='brutal@symple.mail',
-            full_name='Alpha User',
+            full_name='Brutal User',
             is_author=True,
             is_subscribed=True,
             is_active=True,
@@ -28,6 +28,7 @@ class Command(BaseCommand):
             'user': user,
             'date': timezone.now(),
             'payment_url': '',
+            'amount': 2100,
             'is_active': True,
             'subscription_period': 'ultra',
         }

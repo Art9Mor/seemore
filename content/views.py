@@ -80,21 +80,19 @@ class ContentDetailView(DetailView):
         self.object = super().get_object(queryset)
         self.object.views_count += 1
         self.object.save()
-        if self.object.paid_only:
-            user = self.request.user
-            if user.is_authenticated:
-                if user.is_superuser or user.is_staff or user.is_subscribed or user == self.object.author.user:
-                    return self.object
-                else:
-                    return redirect(reverse('users:must_subscribe'))
-            else:
-                return redirect(reverse('users:must_register'))
         return self.object
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        user = self.request.user
+        if self.object.paid_only and not (
+                user.is_superuser or user.is_staff or user.is_subscribed or user == self.object.author.user
+        ):
+            return redirect(reverse('users:must_subscribe'))
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if isinstance(self.object, Content):
-            context['author'] = self.object.author
         context['title'] = 'Content Detail'
         return context
 
@@ -141,7 +139,7 @@ class ContentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         content = self.get_object()
         user = self.request.user
-        return user == content.author.user
+        return user == content.author.user or user.is_superuser or user.is_staff
 
     def handle_no_permission(self):
         return render(self.request, 'content/content_no_permission.html')
@@ -158,40 +156,20 @@ class ContentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return super().form_valid(form)
 
 
-class ContentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class ContentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """
     Delete an existing content.
     """
     model = Content
     success_url = reverse_lazy('content:content_list')
-    template_name = 'content/content_confirm_delete.html'
-    permission_required = 'content.delete_content'
     extra_context = {
         'title': 'Delete Content',
     }
 
     def test_func(self):
-        """
-        Determine if a user is allowed to delete content.
-        """
         content = self.get_object()
-
-        if super().has_permission():
-            return (
-                    self.request.user.is_superuser or
-                    self.request.user.groups.filter(name='Moderators').exists() or
-                    self.request.user == content.author.user
-                    )
-        return False
-
-    def get_object(self, queryset=None):
-        """
-        Получение объекта контента для удаления и проверка доступа к нему.
-        """
-        obj = super().get_object(queryset)
-        if not obj.author.user == self.request.user:
-            raise Http404("You are not allowed to delete this content.")
-        return obj
+        user = self.request.user
+        return user == content.author.user or user.is_superuser or user.is_staff
 
 
 class ContentPaidListView(LoginRequiredMixin, ListView):
@@ -311,7 +289,8 @@ class ReportListView(LoginRequiredMixin, ListView):
         content_pk = self.kwargs.get('pk')
         content_item = get_object_or_404(Content, pk=content_pk)
         context['content'] = content_item
-        context['title'] = f'Reports for Article: {content_item.category}/{content_item.title}/{content_item.author.nickname}'
+        context[
+            'title'] = f'Reports for Article: {content_item.category}/{content_item.title}/{content_item.author.nickname}'
         return context
 
 
@@ -390,4 +369,3 @@ def author_content(request, pk):
         'title': f'All content of {author_item.nickname}',
     }
     return render(request, 'content/author_content.html', context)
-

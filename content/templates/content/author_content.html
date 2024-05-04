@@ -6,8 +6,8 @@
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
                 <p class="lead text-body-secondary">
-                    Here you can see all content of our authors.
-                    {% if user.is_authenticated %}
+                    Here you can see all content of chosen author.
+                    {% if user.is_author %}
                         <p>Also, you can
                             <a href="{% url 'content:content_create' %}" class="btn btn-link">write your content</a>
                         </p>

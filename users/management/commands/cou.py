@@ -26,7 +26,8 @@ class Command(BaseCommand):
         subscription_data = {
             'user': user,
             'date': timezone.now(),
-            'payment_url': '',
+            'payment_url': '345',
+            'amount': 2100,
             'is_active': True,
             'subscription_period': 'ultra',
         }

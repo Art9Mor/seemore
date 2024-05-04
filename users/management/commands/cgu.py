@@ -12,7 +12,7 @@ class Command(BaseCommand):
         user = User.objects.create(
             phone_number='+1-111-111-11-11',
             email='gamma@symple.mail',
-            full_name='Alpha User',
+            full_name='Gamma User',
             is_active=True,
         )
         user.set_password('8756')

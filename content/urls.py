@@ -15,16 +15,16 @@ urlpatterns = [
     path('content_free_list/', views.ContentFreeListView.as_view(), name='content_free_list'),
     path('content/<int:pk>/', views.ContentDetailView.as_view(), name='content_detail'),
     path('content/create/', views.ContentCreateView.as_view(), name='content_create'),
-    path('content/update/<int:pk>/', views.ContentUpdateView.as_view(), name='content_update'),
-    path('content/delete/<int:pk>/', views.ContentDeleteView.as_view(), name='content_delete'),
+    path('content/<int:pk>/update/', views.ContentUpdateView.as_view(), name='content_update'),
+    path('content/<int:pk>/delete/', views.ContentDeleteView.as_view(), name='content_delete'),
     path('content_success_create/', views.content_success_create, name='content_success_create'),
 
     # Author URLs
     path('author_list/', views.AuthorListView.as_view(), name='author_list'),
     path('become_author/', views.BecomeAuthorView.as_view(), name='become_author'),
-    path('author/detail/<int:pk>/', views.AuthorDetailView.as_view(), name='author_detail'),
+    path('author/<int:pk>/detail/', views.AuthorDetailView.as_view(), name='author_detail'),
     path('an_author/', views.an_author, name='an_author'),
-    path('author/delete/<int:pk>/', views.AuthorDeleteView.as_view(), name='author_delete'),
+    path('author/<int:pk>/delete/', views.AuthorDeleteView.as_view(), name='author_delete'),
     path('<int:pk>/author_content/', views.author_content, name='author_content'),
 
     # Report URLs

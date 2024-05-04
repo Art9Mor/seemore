@@ -41,8 +41,8 @@
                     </div>
                     <div class="card-footer d-flex justify-content-center gap-3">
                         <a href="{% url 'content:home' %}" class="btn btn-primary">To home</a>
-                        <a href="{% url 'content:author_detail' object.author.pk %}" class="btn btn-info">Author</a>
-                        <a href="{% url 'content:report_create' content.pk %}" class="btn btn-danger">Report this content</a>
+                        <a href="{% if content.author %}{% url 'content:author_detail' object.author.pk %}{% endif %}" class="btn btn-info">Author</a>
+                        <a href="{% if content.author %}{% url 'content:report_create' content.pk %}{% endif %}" class="btn btn-danger">Report this content</a>
                         {% if user.is_superuser or user.is_staff %}
                             <a href="{% url 'content:report_list' object.pk%}" class="btn btn-info">Look at reports</a>
                         {% endif %}

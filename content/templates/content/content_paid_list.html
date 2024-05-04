@@ -27,7 +27,8 @@
                             <div class="card shadow-sm" style="width: 18rem;">
                                 <img src="{{ object.image|mymedia }}" class="card-img-top" alt="...">
                                 <div class="card-body">
-                                    <p class="card-text">{{ object|title }}</p>
+                                    <h5 class="card-title">{{ object|title }}</h5>
+                                    <p class="card-text">Author: {{ object.author.nickname }}</p>
                                     <p class="card-text">Views: {{ object.views_count }}</p>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group">

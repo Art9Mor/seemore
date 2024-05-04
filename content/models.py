@@ -1,6 +1,5 @@
 from django.contrib.auth.models import Permission
 from django.db import models
-from django.db.models import Count
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
@@ -19,8 +18,7 @@ class Author(models.Model):
     nickname = models.CharField(max_length=255, verbose_name='Nickname', blank=True)
 
     def save(self, *args, **kwargs):
-        if not self.nickname:
-            self.nickname = self.user.full_name
+        self.nickname = self.user.full_name
         super().save(*args, **kwargs)
 
     def __str__(self):
