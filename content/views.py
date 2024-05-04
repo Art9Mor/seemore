@@ -86,7 +86,10 @@ class ContentDetailView(DetailView):
         self.object = self.get_object()
         user = self.request.user
         if self.object.paid_only and not (
-                user.is_superuser or user.is_staff or user.is_subscribed or user == self.object.author.user
+                user.is_superuser or
+                user.is_staff or
+                user.is_subscribed or
+                user == self.object.author.user
         ):
             return redirect(reverse('users:must_subscribe'))
         return super().get(request, *args, **kwargs)
@@ -95,6 +98,11 @@ class ContentDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Content Detail'
         return context
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse_lazy('users:must_register'))
+        return super().dispatch(request, *args, **kwargs)
 
 
 class ContentCreateView(LoginRequiredMixin, CreateView):

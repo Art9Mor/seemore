@@ -138,7 +138,6 @@ class CreatePaymentSubscriptionView(LoginRequiredMixin, View):
             subscription = PaymentSubscription.objects.create(
                 user=user,
                 amount=amount_in_cents,
-                payment_url='',
                 is_active=False
             )
 
